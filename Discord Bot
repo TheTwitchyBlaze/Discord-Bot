@@ -1,0 +1,38 @@
+const Discord = require('discord.js');
+const fs = require('fs');
+const http = require('http');
+const request = require(`request`);
+const delay = require('delay');
+const bot = new Discord.Client();
+const token = '' //Password to log in for bot. (left empty for security reasons)
+
+bot.on('ready', () =>{
+    console.log('This bot is online!');
+})
+
+bot.login(token);
+
+bot.on('message', msg =>{
+    console.log(msg.content);
+    if(msg.content === 'Ethan' && msg.author.id !== bot.user.id){ //Pings Ethan to cut his hair. ;)
+        msg.channel.send('Cut your hair <@269583766198943745>');  
+    }
+    if(msg.content === 'cv'){    //Grabs attachment from message.
+        console.log('Attachment Downloaded! '+msg.attachments.size);
+        var x = msg.attachments.size;
+        download(msg.attachments.first().url); //Looks for url
+         
+        msg.channel.send('Got it!')
+    }
+    if(msg.content === 'dv') { //Sends downloaded video back.
+        msg.channel.send('Here you go!',new Discord.Attachment('./Other/t.webm')); 
+        console.log('Video Sent!')
+    }
+})
+
+function download(url){
+    request.get(url) //Requests
+        .on('error', console.error)
+        .pipe(fs.createWriteStream('./Other/t.webm')); //Downloads url to file.
+        
+}
